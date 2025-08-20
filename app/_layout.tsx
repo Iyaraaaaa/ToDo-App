@@ -9,7 +9,15 @@ export default function RootLayout() {
 
   useEffect(() => {
     // Initialize notifications when the app starts
-    NotificationService.initializeNotifications();
+    const initNotifications = async () => {
+      try {
+        await NotificationService.initializeNotifications();
+      } catch (error) {
+        console.error('Failed to initialize notifications:', error);
+      }
+    };
+    
+    initNotifications();
   }, []);
 
   return (

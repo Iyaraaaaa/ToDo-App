@@ -38,11 +38,16 @@ export default function AddTaskScreen() {
       // Schedule notification if profile exists
       if (profile) {
         const userName = `${profile.firstName} ${profile.lastName}`;
-        const notificationId = await NotificationService.scheduleTaskNotification(newTask, userName);
-        if (notificationId) {
-          console.log('Notification scheduled successfully');
-        } else {
-          console.log('Failed to schedule notification');
+        try {
+          const notificationId = await NotificationService.scheduleTaskNotification(newTask, userName);
+          if (notificationId) {
+            console.log('Notification scheduled successfully');
+          } else {
+            console.log('Notification not scheduled (may be in past or permissions denied)');
+          }
+        } catch (notificationError) {
+          console.error('Error scheduling notification:', notificationError);
+          // Don't fail the task creation if notification fails
         }
       }
 

@@ -49,11 +49,16 @@ export default function EditTaskScreen() {
       if (profile) {
         const userName = `${profile.firstName} ${profile.lastName}`;
         const updatedTask = { ...task, ...taskData };
-        const notificationId = await NotificationService.scheduleTaskNotification(updatedTask, userName);
-        if (notificationId) {
-          console.log('Notification rescheduled successfully');
-        } else {
-          console.log('Failed to reschedule notification');
+        try {
+          const notificationId = await NotificationService.scheduleTaskNotification(updatedTask, userName);
+          if (notificationId) {
+            console.log('Notification rescheduled successfully');
+          } else {
+            console.log('Notification not rescheduled (may be in past or permissions denied)');
+          }
+        } catch (notificationError) {
+          console.error('Error rescheduling notification:', notificationError);
+          // Don't fail the task update if notification fails
         }
       }
 
